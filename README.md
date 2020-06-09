@@ -1,6 +1,7 @@
 # steiner-tree-2-approximation
-steiner tree 2-approximation O(N log N)
+steiner tree 2-approximation O(E + V log V)
 
+Paper: [A faster approximation algorithm for the Steiner problem in graphs](https://www.sciencedirect.com/science/article/pii/002001908890066X)
 ## Example usage
 ```cpp
 #include "Structure.hpp"
