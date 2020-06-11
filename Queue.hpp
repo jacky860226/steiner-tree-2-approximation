@@ -75,10 +75,5 @@ template <typename TP> class Queue
     {
         return S == T;
     }
-
-    std::vector<TP> &shift()
-    {
-        return v;
-    }
 };
 } // namespace steiner_tree

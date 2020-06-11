@@ -14,6 +14,7 @@ template <class CostTy> struct edge
     }
     uint32_t getDual(uint32_t v) const
     {
+        assert(v == v1 || v == v2);
         if (v == v1)
             return v2;
         else
@@ -41,7 +42,7 @@ template <class CostTy> class UndirectedGraph
     }
     size_t addEdge(uint32_t v1, uint32_t v2, const CostTy &cost)
     {
-        assert(cost > 0);
+        assert(!(cost < 0));
         if (v1 > v2)
             std::swap(v1, v2);
         while (adj_lists.size() <= v2)

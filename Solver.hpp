@@ -37,15 +37,16 @@ template <class CostTy> class Solver
         auto N = G.getVertexNum();
         std::vector<bool> inqueue(N, false);
         Queue<size_t> q;
-        dist.reserve(N);
-        prev_eid.reserve(N);
-        index.reserve(N);
-        for (size_t i = 0; i < N; ++i)
-        {
-            dist.emplace_back(INF);
-            prev_eid.emplace_back(INVLID);
-            index.emplace_back(INVLID);
-        }
+
+        dist.clear();
+        dist.resize(N, INF);
+
+        prev_eid.clear();
+        prev_eid.resize(N, INVLID);
+
+        index.clear();
+        index.resize(N, INVLID);
+
         for (auto v : terminalVertice)
         {
             dist[v] = 0;
@@ -82,6 +83,7 @@ template <class CostTy> class Solver
 
     void calculateCrossEdge()
     {
+        CrossEdge.clear();
         size_t eid = 0;
         for (const auto &edge : G.getEdges())
         {
@@ -91,12 +93,12 @@ template <class CostTy> class Solver
             }
             eid++;
         }
-        std::sort(CrossEdge.begin(), CrossEdge.end());
     }
 
     void Kruskal_1()
     {
         SelectKEdge.clear();
+        std::sort(CrossEdge.begin(), CrossEdge.end());
         ds.init(G.getVertexNum());
         for (const auto &TUS : CrossEdge)
         {
