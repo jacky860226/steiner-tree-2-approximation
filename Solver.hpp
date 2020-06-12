@@ -49,10 +49,10 @@ template <class CostTy> class Solver
 
         for (auto v : terminalVertice)
         {
-            dist[v] = 0;
-            index[v] = v;
+            dist.at(v) = 0;
+            index.at(v) = v;
             q.push_back(v);
-            inqueue[v] = true;
+            inqueue.at(v) = true;
         }
         while (!q.empty())
         {
@@ -89,17 +89,21 @@ template <class CostTy> class Solver
         {
             if (index[edge.v1] != index[edge.v2])
             {
-                CrossEdge.emplace_back(dist[edge.v1] + dist[edge.v2] + edge.cost, eid);
+                if (index[edge.v1] != INVLID && index[edge.v2] != INVLID)
+                {
+                    CrossEdge.emplace_back(dist[edge.v1] + dist[edge.v2] + edge.cost, eid);
+                }
             }
-            eid++;
+            ++eid;
         }
     }
 
-    void Kruskal_1()
+    bool Kruskal_1(size_t terminalSize)
     {
         SelectKEdge.clear();
         std::sort(CrossEdge.begin(), CrossEdge.end());
         ds.init(G.getVertexNum());
+        size_t unionCnt = 0;
         for (const auto &TUS : CrossEdge)
         {
             size_t eid;
@@ -109,8 +113,10 @@ template <class CostTy> class Solver
             {
                 SelectKEdge.emplace_back(eid);
                 ds.Union(index[edge.v1], index[edge.v2]);
+                ++unionCnt;
             }
         }
+        return terminalSize == unionCnt + 1;
     }
 
     void edgeRecover()
@@ -156,26 +162,18 @@ template <class CostTy> class Solver
         }
     }
 
-    bool edgeReduce(const std::vector<size_t> &terminalVertice)
+    void edgeReduce()
     {
         size_t N = G.getVertexNum();
         std::stack<size_t> stack;
-        bool isConnected = true;
         for (size_t i = 0; i < N; ++i)
         {
-            if (index[i] == i && deg[i] == 0)
-                isConnected = false;
             if (index[i] != i && deg[i] == 1)
             {
-                deg[i]--;
+                --deg[i];
                 stack.emplace(i);
             }
         }
-        if (terminalVertice.size() <= 1)
-            isConnected = true;
-
-        if (!isConnected)
-            return false;
 
         while (!stack.empty())
         {
@@ -188,14 +186,11 @@ template <class CostTy> class Solver
                     continue;
                 used_eid.erase(eid);
                 auto next = G.getEdge(eid).getDual(v);
-                deg[next]--;
+                --deg[next];
                 if (deg[next] == 0 && index[next] != next)
                     stack.emplace(next);
             }
         }
-        SelectKEdge.clear();
-        std::copy(used_eid.begin(), used_eid.end(), std::back_inserter(SelectKEdge));
-        return true;
     }
 
   public:
@@ -208,12 +203,14 @@ template <class CostTy> class Solver
     {
         SPFA(terminalVertice);
         calculateCrossEdge();
-        Kruskal_1();
+        if (!Kruskal_1(terminalVertice.size()))
+            return std::vector<size_t>();
         edgeRecover();
         Kruskal_2();
-        if (edgeReduce(terminalVertice))
-            return SelectKEdge;
-        return std::vector<size_t>();
+        edgeReduce();
+        SelectKEdge.clear();
+        std::copy(used_eid.begin(), used_eid.end(), std::back_inserter(SelectKEdge));
+        return SelectKEdge;
     }
 };
 } // namespace steiner_tree

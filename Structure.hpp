@@ -40,6 +40,10 @@ template <class CostTy> class UndirectedGraph
         std::vector<std::vector<uint32_t>>().swap(adj_lists);
         costSum = 0;
     }
+    void setVertixNum(size_t num)
+    {
+        adj_lists.resize(num);
+    }
     size_t addEdge(uint32_t v1, uint32_t v2, const CostTy &cost)
     {
         assert(!(cost < 0));
