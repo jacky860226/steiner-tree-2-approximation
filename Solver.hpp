@@ -195,7 +195,7 @@ template <class CostTy> class Solver
 
   public:
     Solver(const UndirectedGraph<CostTy> &G, const CostTy INF = std::numeric_limits<CostTy>::max() / 2 - 1)
-        : G(G), INVLID(std::numeric_limits<size_t>::max()), INF(INF)
+        : INVLID(std::numeric_limits<size_t>::max()), INF(INF), G(G)
     {
         assert(G.getEdgeCosts() < INF);
     }
