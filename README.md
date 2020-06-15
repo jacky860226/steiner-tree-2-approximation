@@ -4,8 +4,8 @@ steiner tree 2-approximation O(E + V log V)
 Paper: [A faster approximation algorithm for the Steiner problem in graphs](https://www.sciencedirect.com/science/article/pii/002001908890066X)
 ## Example usage
 ```cpp
-#include "Structure.hpp"
 #include "Solver.hpp"
+#include "Structure.hpp"
 #include <iostream>
 #include <random>
 #include <vector>
@@ -20,7 +20,7 @@ int main()
     {
         for (int j = i + 1; j < N; ++j)
         {
-            size_t eid = G.addEdge(i, j, MT()*0.001);
+            size_t eid = G.addEdge(i, j, MT() * 0.001);
         }
         terminals.emplace_back(i);
     }
@@ -28,7 +28,8 @@ int main()
     terminals.erase(terminals.begin() + M, terminals.end());
     steiner_tree::Solver<double> solver(G);
     auto res = solver.solve(terminals);
-    for (auto eid : res)
+    cout << res->size() << '\n';
+    for (auto eid : *res)
     {
         cout << G.getEdge(eid).v1 << ' ' << G.getEdge(eid).v2 << ' ' << G.getEdge(eid).cost << endl;
     }

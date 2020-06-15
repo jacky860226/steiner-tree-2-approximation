@@ -3,6 +3,7 @@
 #include <cassert>
 #include <cstdint>
 #include <limits>
+#include <memory>
 #include <stack>
 #include <tuple>
 #include <unordered_set>
@@ -199,18 +200,18 @@ template <class CostTy> class Solver
     {
         assert(G.getEdgeCosts() < INF);
     }
-    std::vector<size_t> solve(const std::vector<size_t> &terminalVertice)
+    std::shared_ptr<std::vector<size_t>> solve(const std::vector<size_t> &terminalVertice)
     {
         SPFA(terminalVertice);
         calculateCrossEdge();
         if (!Kruskal_1(terminalVertice.size()))
-            return std::vector<size_t>();
+            return nullptr;
         edgeRecover();
         Kruskal_2();
         edgeReduce();
         SelectKEdge.clear();
         std::copy(used_eid.begin(), used_eid.end(), std::back_inserter(SelectKEdge));
-        return SelectKEdge;
+        return std::make_shared<std::vector<size_t>>(SelectKEdge);
     }
 };
 } // namespace steiner_tree
