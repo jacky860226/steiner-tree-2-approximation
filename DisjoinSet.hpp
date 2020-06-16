@@ -1,5 +1,6 @@
 #pragma once
 #include <algorithm>
+#include <unordered_set>
 #include <vector>
 /*
     DisjoinSet use 0-base
@@ -17,15 +18,26 @@ class DisjoinSet
     {
         init(s);
     }
-    void init(size_t s)
+    void init(size_t s, const std::unordered_set<size_t> &special = {})
     {
         sz = s;
         dis.resize(sz);
         sum.resize(sz);
-        for (size_t i = 0; i < sz; ++i)
+        if (special.size())
         {
-            dis[i] = i;
-            sum[i] = 1;
+            for (auto i : special)
+            {
+                dis[i] = i;
+                sum[i] = 1;
+            }
+        }
+        else
+        {
+            for (size_t i = 0; i < sz; ++i)
+            {
+                dis[i] = i;
+                sum[i] = 1;
+            }
         }
     }
     size_t find(size_t p)
