@@ -17,7 +17,7 @@ int main()
     size_t n, m;
     cin >> n >> m;
     steiner_tree::UndirectedGraph<double> G;
-    G.setVertixNum(n);
+    G.setVertexNum(n);
     while (m--)
     {
         size_t v1, v2, cost;

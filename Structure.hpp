@@ -34,13 +34,37 @@ template <class CostTy> class UndirectedGraph
     UndirectedGraph() : edges(), adj_lists(), costSum(0)
     {
     }
+    UndirectedGraph(UndirectedGraph &&other)
+        : edges(std::move(other.edges)), adj_lists(std::move(other.adj_lists)), costSum(other.costSum)
+    {
+    }
+    UndirectedGraph &operator=(const UndirectedGraph &other)
+    {
+        edges = other.edges;
+        adj_lists = other.adj_lists;
+        costSum = other.costSum;
+        return *this;
+    }
+    UndirectedGraph &operator=(UndirectedGraph &&other)
+    {
+        edges = std::move(other.edges);
+        adj_lists = std::move(other.adj_lists);
+        costSum = other.costSum;
+        return *this;
+    }
     void clear()
+    {
+        edges.clear();
+        adj_lists.clear();
+        costSum = 0;
+    }
+    void memoryClear()
     {
         std::vector<edge<CostTy>>().swap(edges);
         std::vector<std::vector<uint32_t>>().swap(adj_lists);
         costSum = 0;
     }
-    void setVertixNum(size_t num)
+    void setVertexNum(size_t num)
     {
         adj_lists.resize(num);
     }
